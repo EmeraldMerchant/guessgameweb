@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新增項目</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .input-bar {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+    }
+
+    input[type="text"] {
+      padding: 0.5em;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px 0 0 10px;
+      width: 200px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    button {
+      padding: 0.5em 1em;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 0 10px 10px 0;
+      background: rgba(255,255,255,0.7);
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .input-bar {
+        flex-direction: column;
+        align-items: center;
+        bottom: 10vh;
+      }
+
+      input[type="text"] {
+        width: 70vw;
+        border-radius: 10px;
+        margin-bottom: 0.5em;
+        font-size: 1em;
+      }
+
+      button {
+        width: 50vw;
+        border-radius: 10px;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body style="background: url('hint.png') no-repeat center center fixed; background-size: cover;">
+  <!-- Title input block (above the item input) -->
+  <div class="input-bar" style="top: 25%;">
+    <input type="text" id="newTitle" placeholder="輸入標題..." />
+    <button onclick="sendTitle()">修改標題</button>
+  </div>
+
+  <!-- Input button (center) -->
+  <div class="input-bar" style="top: 45%;">
+    <input type="text" id="newItem" placeholder="輸入項目..." />
+    <button onclick="sendItem()">送出</button>
+  </div>
+
+  <!-- Reset button (bottom center) -->
+  <div class="input-bar" style="bottom: 25%; justify-content: center;">
+    <button onclick="resetData()">重置</button>
+  </div>
+
+  <script>
+    const API_BASE = "https://guessgame-j7ev.onrender.com";
+
+    async function sendItem() {
+      const input = document.getElementById("newItem");
+      const item = input.value.trim();
+      if (!item) return;
+      await fetch(`${API_BASE}/api/add`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item })
+      });
+      input.value = "";
+    }
+
+    async function sendTitle() {
+      const input = document.getElementById("newTitle");
+      const title = input.value.trim();
+      if (!title) return;
+      await fetch(`${API_BASE}/api/settitle`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title })
+      });
+      input.value = "";
+    }
+
+    async function resetData() {
+      if (!confirm("你確定要重置所有資料嗎？")) return;
+      await fetch(`${API_BASE}/api/reset`, {
+        method: 'POST'
+      });
+    }
+  </script>
+</body>
+</html>

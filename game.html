@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>遊戲頁面</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body style="background: url('hint.png') no-repeat center center fixed; background-size: cover;">
+  <h1 id="title" style="text-align:center; color:white; margin-top: 2vh;"></h1>
+  <ul id="itemList" class="item-list"></ul>
+
+  <script>
+    const API_BASE = "https://guessgame-j7ev.onrender.com";
+
+    async function fetchData() {
+      try {
+        const res = await fetch(`${API_BASE}/api/data`);
+        const data = await res.json();
+
+        document.getElementById("title").textContent = data.title || "";
+
+        const list = document.getElementById("itemList");
+        list.innerHTML = "";
+        data.items.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    }
+
+    const socket = new WebSocket("wss://guessgame-j7ev.onrender.com/ws");
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      if (event.data === "updated") {
+        fetchData();
+      }
+    };
+
+    socket.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    fetchData(); // Initial load
+  </script>
+</body>
+</html>
