@@ -28,7 +28,7 @@ body, html {
 
 #title {
   font-size: 3em;
-  color: white;
+  color: black;
   text-align: center;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
   margin-top: 2vh;
@@ -44,7 +44,7 @@ body, html {
 
 #itemList li {
   font-size: 1.8em;
-  color: white;
+  color: black;
   margin-bottom: 1vh;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
